@@ -5,7 +5,7 @@ Source   = require './source'
 class Unix2WS
 
   constructor: (params={}) ->
-    # Port to open for websocket connections
+    # Port to open for socket.io
     @port = params.port ? 10000
 
     # Debug incoming data to console
@@ -23,7 +23,7 @@ class Unix2WS
       when params.socket?      then Source.socket
       when params.fifo?        then Source.fifo
 
-  # Propagate data to websocket client
+  # Propagate data to socket.io client
   propagate: (data) =>
     if @json
       try

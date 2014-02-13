@@ -1,7 +1,7 @@
 {
   "name": "Unix2WebSocket",
   "version": "0.0.1",
-  "description": "Unix2WebSocket allows you to easily stream incoming data on a UNIX socket to clients connected through websockets",
+  "description": "Unix2WS allows you to easily stream data to Socket.IO clients",
   "main": "./lib/unix2ws.js",
   "bin": {
     "u2ws": "./bin/u2ws"
