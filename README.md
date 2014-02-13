@@ -32,6 +32,4 @@ Options:
 
 ## Example
 
-Have a look at the example, you'll see that it's pretty simple
-
-![ScreenShot](/example/screenshot.png)
+Open the example HTML file in your browser and give it a try, you'll see it's pretty simple
