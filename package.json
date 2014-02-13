@@ -7,7 +7,7 @@
     "u2ws": "./bin/u2ws"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha spec"
   },
   "keywords": [
     "cat",
@@ -16,11 +16,13 @@
     "socket",
     "websockets"
   ],
-  "dependencies":{
-    "socket.io": "latest"
+  "dependencies": {
+    "socket.io": "0.9.16",
+    "coffee-script": "1.7.1",
+    "minimist": "0.0.7"
   },
   "devDependencies": {
-    "mocha"    :  "latest"
+    "mocha": "1.17.1"
   },
   "author": "Louis Lambeau <louislambeau@gmail.com>",
   "license": "ISC"
