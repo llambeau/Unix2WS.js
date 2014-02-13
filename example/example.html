@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unix2WS - example</title>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+    body {
+      padding-top: 50px;
+    }
+    .center {
+      padding: 40px 15px;
+      text-align: center;
+    }
+    .console {
+      background: black;
+      padding: 10px;
+      margin: 20px;
+    }
+    .lines {
+      text-align: left;
+      color: #63de00!important;
+      font-family: "Courier New", Courier, monospace;
+      height: 300px;
+    }
+    .lines p {
+      margin: 0;
+    }
+    .lines p.first {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+    </style>
+
+  </head>
+  <body>
+
+    <div class="container">
+
+      <div class="center">
+        <h1>Received from Unix2WS:</h1>
+        
+        <div class="console">
+          <div class="lines">
+            <p class="first">Trying to connect...</p>
+          </div>
+        </div>
+        <p class="comment">
+          To try this example, run ./bin/u2ws with default options,<br/>
+          reload this page, then try the following command: 
+          <pre>echo '{"hello":"world"}' | nc -U socket.sock</pre>
+        </p>
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+    <!-- Download socket.io.js from Unix2WS -->
+    <script src="http://localhost:10000/socket.io/socket.io.js"></script>
+
+    <script>
+      $(function(){
+        var socket = io.connect('http://localhost:10000');
+        socket.on("connect", function(){
+          $(".console .lines p.first").html("Connected!")
+        });
+        socket.on("data", function(data){
+          $(".lines").append("<p>&raquo; " + JSON.stringify(data) + "</p>");
+        });
+      });
+    </script>
+
+  </body>
+</html>
