@@ -19,6 +19,10 @@ class NetSource
   read: =>
     @server.listen(@port)
 
+  close: =>
+    @server.close()
+    this.destroy()
+
   destroy: =>
     if fs.existsSync(@port)
       fs.unlinkSync(@port)
@@ -28,12 +32,16 @@ class FileSource
   constructor: (@fd, @desc, @callback) ->
     this.destroy()
     @desc = "FILE(#{@fd})"
-    exec "mkfifo #{@fd}"
-
+    
   read: =>
-    @stream = fs.createReadStream(@fd)
-    @stream.on 'close', this.read
-    @callback @stream
+    exec "mkfifo #{@fd}", =>
+      @stream = fs.createReadStream(@fd)
+      @stream.on 'close', this.read
+      @callback @stream
+
+  close: =>
+    @stream.close()
+    this.destroy()
 
   destroy: =>
     if fs.existsSync(@fd)

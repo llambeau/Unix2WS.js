@@ -43,11 +43,11 @@ class Unix2WS
     # Create socket.io server
     @io = SocketIO.listen(@port, { log: @debug })
 
-    @source = @sourceFactory @sourceDesc, (@source) =>
+    @source = @sourceFactory @sourceDesc, (stream) =>
       data = ""
       # Process the received content and convert it to 
       # a line by line propagation
-      @source.on "data", (chunk) =>
+      stream.on "data", (chunk) =>
         if @debug == true
           console.log "Data chunk received: #{chunk.toString()}"
 
@@ -67,14 +67,11 @@ class Unix2WS
         if data != ""
           this.propagate(data)
 
-      @source.on "end", finish
-
-      # Only happens with fifo. TODO: re-open?
-      #@source.on "close", ->
-      #  console.log "Source closed, quitting"
-      #  process.exit()
-
     # Read the source 
     @source.read()
-    
+
+  ## Stop the tool
+  stop: () =>
+    @source.close()
+
 module.exports = Unix2WS

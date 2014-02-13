@@ -87,6 +87,8 @@
 
         var socket = io.connect('http://localhost:10000');
 
+        var animation = null;
+        
         socket.on("connect", function(){
           $(".console .lines p.first").html("Connected!")
         });
@@ -95,7 +97,10 @@
           $(".lines").append("<p>&raquo; " + JSON.stringify(data) + "</p>");
 
           var elm = $(".lines");
-          elm.animate({ 
+          if (animation) {
+            animation.stop();
+          }
+          animation = elm.animate({ 
             scrollTop: elm.prop("scrollHeight")
           }, 1000);
 

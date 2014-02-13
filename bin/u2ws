@@ -60,3 +60,8 @@ options =
 
 tool = new Unix2WS(options)
 tool.start()
+
+process.on 'SIGINT', ->
+  console.log "\nGracefully shutting down from SIGINT (Ctrl-C)"
+  tool.stop()
+  process.kill()
