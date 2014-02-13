@@ -1,51 +1,28 @@
 fs       = require 'fs'
-net      = require 'net'
 SocketIO = require 'socket.io'
+Source   = require './source'
 
 class Unix2WS
 
   constructor: (params={}) ->
-    # Socket file
-    @socket = params.socket ? "socket.sock"
-    
     # Port to open for websocket connections
     @port = params.port ? 10000
-    
+
     # Debug incoming data to console
     @debug = params.debug ? false
-
     # Decode received lines as JSON objects?
     @json = params.json ? true
 
-    # Delete socket if already present
-    if fs.existsSync(@socket)
-      fs.unlink(@socket)
-    
-    # Create unix server
-    @unixServer = net.createServer (socket) =>
-      data = ""
+    @sourceDesc = params.unix_socket ? params.tcp_socket ? params.fifo 
 
-      # Process the received content and convert it to 
-      # a line by line propagation
-      socket.on "data", (chunk) =>
-        if @debug == true
-          console.log "Data chunk received: #{chunk.toString()}"
+    ##
+    unless @sourceDesc?
+      throw new Error("At least one input method must be chosen")
 
-        data += chunk.toString()
-        lines = data.split("\n")
-        
-        last_chunk = lines.pop()
-
-        for idx, line of lines
-          this.propagate(line)
-
-        data = last_chunk
-
-      # Propagate the last chunk of data (if any)
-      # when the client closes the connection
-      socket.on "close", -> 
-        if data != ""
-          this.propagate(data)
+    @sourceFactory = switch
+      when params.unix_socket? then Source.unix
+      when params.tcp_socket?  then Source.tcp
+      when params.fifo?        then Source.fifo
 
   # Propagate data to websocket client
   propagate: (data) =>
@@ -63,17 +40,41 @@ class Unix2WS
   
   ## Start the tool
   start: =>
-    console.log "Starting Unix2WebSocket, UNIX socket: #{@socket}, WS port: #{@port}"
-
-    # Open the unix socket and start the server
-    @unixServer.listen(@socket)
-    
     # Create socket.io server
     @io = SocketIO.listen(@port, { log: @debug })
-    
-  stop: =>
-    @io.server.close()
-    @unixServer.close()
-    fs.unlink @socket
 
+    @source = @sourceFactory @sourceDesc, (@source) =>
+      data = ""
+      # Process the received content and convert it to 
+      # a line by line propagation
+      @source.on "data", (chunk) =>
+        if @debug == true
+          console.log "Data chunk received: #{chunk.toString()}"
+
+        data += chunk.toString()
+        lines = data.split("\n")
+        
+        last_chunk = lines.pop()
+
+        for idx, line of lines
+          this.propagate(line)
+
+        data = last_chunk
+
+      # Propagate the last chunk of data (if any)
+      # when the client closes the connection
+      finish = ->
+        if data != ""
+          this.propagate(data)
+
+      @source.on "end", finish
+
+      # Only happens with fifo. TODO: re-open?
+      #@source.on "close", ->
+      #  console.log "Source closed, quitting"
+      #  process.exit()
+
+    # Read the source 
+    @source.read()
+    
 module.exports = Unix2WS

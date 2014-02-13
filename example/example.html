@@ -31,8 +31,12 @@
       background: black;
       padding: 10px;
       margin: 20px;
+      -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 0px 20px rgba(0,0,0,0.75);
     }
     .lines {
+      margin: 10px;
+      overflow: auto;
       text-align: left;
       color: #63de00!important;
       font-family: "Courier New", Courier, monospace;
@@ -80,13 +84,23 @@
 
     <script>
       $(function(){
+
         var socket = io.connect('http://localhost:10000');
+
         socket.on("connect", function(){
           $(".console .lines p.first").html("Connected!")
         });
+
         socket.on("data", function(data){
           $(".lines").append("<p>&raquo; " + JSON.stringify(data) + "</p>");
+
+          var elm = $(".lines");
+          elm.animate({ 
+            scrollTop: elm.prop("scrollHeight")
+          }, 1000);
+
         });
+
       });
     </script>
 

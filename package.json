@@ -19,7 +19,7 @@
   "dependencies": {
     "socket.io": "0.9.16",
     "coffee-script": "1.7.1",
-    "minimist": "0.0.7"
+    "yargs": "~1.0.15"
   },
   "devDependencies": {
     "mocha": "1.17.1"

@@ -1,16 +1,62 @@
 #!/usr/bin/env coffee
 minimist = require 'minimist'
 Unix2WS  = require '../lib/unix2ws.coffee'
+yargs    = require 'yargs'
 
-argv = minimist(process.argv.slice(2), {
-  string: 'socket',
-  boolean: ['debug', 'json']
-})
+##
+argv = yargs
+  .usage('Forward data to connected websockets\nUsage: $0')
+  .example(
+    '$0 --from-tcp 10001 --ws-port 10000', 
+    'From TCP socket :10001 to WS clients on port 10000'
+  )
+  .example(
+    '$0 --from-unix unix.sock --ws-port 10000', 
+    'From UNIX socket \'unix.sock\' to WS clients on port 10000'
+  )
+  .example(
+    '$0 --from-fifo fifo --ws-port 10000', 
+    'From named pipe \'fifo\' to WS clients on port 10000'
+  )
 
-tool = new Unix2WS(argv)
+  .alias('d', 'debug')
+  .alias('j', 'json')
+  
+  .alias('t', 'from-tcp')
+  .alias('u', 'from-unix')
+  .alias('f', 'from-fifo')
+  .alias('p', 'ws-port')
+
+  .default('d', false)
+  .default('j', true)
+  .default('p', 10000)
+
+  .boolean(['d', 'j'])
+  .string(['f', 'u', 't'])
+
+  .describe('d', "Prints debugging information")
+  .describe('j', "Try to JSON.parse input lines")
+  .describe('p', "Port to open for socket.io")
+  .describe('t', "Opens TCP port for input")
+  .describe('f', "Creates named pipe for input")
+  .describe('u', "Creates UNIX socket for input")
+
+  .check (argv) ->
+    chosen = argv['from-tcp'] ? argv["from-unix"] ? argv["from-fifo"]
+    if not(chosen?) || typeof(chosen) isnt "string" || chosen == ""
+      throw "At least one of '-t', '-f' or '-u' must be used"
+
+  .argv
+
+# Options for the tool
+
+options =  
+  port         : argv['ws-port']
+  unix_socket  : argv['from-unix']
+  tcp_socket   : argv['from-tcp']
+  fifo         : argv['from-fifo']
+  debug        : argv['debug']
+  json         : argv['json']
+
+tool = new Unix2WS(options)
 tool.start()
-
-process.on 'SIGINT', ->
-  console.log "\nGracefully shutting down from SIGINT (Ctrl-C)"
-  tool.stop()
-  process.exit()
