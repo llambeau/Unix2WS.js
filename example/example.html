@@ -57,13 +57,12 @@
     <div class="container">
 
       <div class="center">
-        <h1>Run <b>u2ws</b>, reload the page &amp; stream your data!<br/></h1>
+        <h1>Run <b>u2ws</b> &amp; stream your data!<br/></h1>
         
         <div class="row">
           <h3>Received from Unix2WS:</h3>
           <div class="console">
             <div class="lines">
-              <p class="first">Trying to connect...</p>
             </div>
           </div>
         </div>
@@ -129,17 +128,22 @@
     <script>
       $(function(){
 
-        var socket = io.connect('http://localhost:10000');
+        // The socket.io object
+        var socket;
+        // First time we connect -> true
+        var isThereAnybodyOutThere = false;
+        // Max attempt for the first connection
+        var attempts = 0;
+        var max_attempts = 10;
 
-        var animation = null;
         
-        socket.on("connect", function(){
-          $(".console .lines p.first").html("Connected!")
-        });
-
-        socket.on("data", function(data){
-          $(".lines").append("<p>&raquo; " + JSON.stringify(data) + "</p>");
-
+        // Animation for the scroll (to be able to cancel it)
+        var animation = null;
+        // 
+        function console_log(data){
+          // add a line
+          $(".lines").append("<p>&raquo; " + data + "</p>");
+          // scroll to the bottom
           var elm = $(".lines");
           if (animation) {
             animation.stop();
@@ -147,8 +151,59 @@
           animation = elm.animate({ 
             scrollTop: elm.prop("scrollHeight")
           }, 1000);
+        }
 
-        });
+        /**
+          * socket.io doesn't try to reconnect if the first connection failed
+          * this method allows to fix that
+          */
+        function connect() {
+          console_log("Trying to connect to unix2ws...");
+          socket = io.connect('http://localhost:10000', {'force new connection': true});
+          
+          // Fail at first connection? unix2ws probably not running yet
+          socket.on("error", function(socket){
+            // never managed to connect, retry manually
+            if (!isThereAnybodyOutThere && attempts < max_attempts){
+              attempts++;
+              var delay = attempts * 1000;
+              console_log("... connection failed. Retrying in " + delay / 1000 + "s ...");
+              // Try to reconnect with an increasing delay
+              setTimeout(connect, delay);
+            } else if (attempts == max_attempts) {
+              console_log("Sorry mate, I'm done trying!");
+            }
+          });
+
+          socket.on("connect", function(){
+            // First time we manage to connect
+            if (!isThereAnybodyOutThere){
+              console_log("BAM: connected! Send me data baby...")
+              onConnect(socket);
+            }
+            isThereAnybodyOutThere = true;
+          })
+        }
+
+        function onConnect(socket) {
+          $(".console .lines p.first").html("Connected!")
+
+          socket.on("data", function(data){
+            console_log(JSON.stringify(data));
+          });
+
+          socket.on("reconnecting", function(data){
+            console_log("... connection dropped. Trying to reconnect");
+          });
+
+          socket.on("reconnect", function(data){
+            console_log("Connection back! rock &amp; roll baby!");
+          });
+
+        }
+
+        // BAM!
+        connect();
 
       });
     </script>
