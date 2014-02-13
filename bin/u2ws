@@ -4,7 +4,7 @@ Unix2WS  = require '../lib/unix2ws.coffee'
 
 argv = minimist(process.argv.slice(2), {
   string: 'socket',
-  boolean: ['debug', 'debug']
+  boolean: ['debug', 'json']
 })
 
 tool = new Unix2WS(argv)
