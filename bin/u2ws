@@ -6,24 +6,14 @@ yargs    = require 'yargs'
 ##
 argv = yargs
   .usage('Forward data to connected websockets\nUsage: $0')
-  .example(
-    '$0 --from-tcp 10001 --ws-port 10000', 
-    'From TCP socket :10001 to WS clients on port 10000'
-  )
-  .example(
-    '$0 --from-unix unix.sock --ws-port 10000', 
-    'From UNIX socket \'unix.sock\' to WS clients on port 10000'
-  )
-  .example(
-    '$0 --from-fifo fifo --ws-port 10000', 
-    'From named pipe \'fifo\' to WS clients on port 10000'
-  )
+  .example('$0 -s 10001 --ws-port 10000', '')
+  .example('$0 -s unix.sock --ws-port 10000', '')
+  .example('$0 -f fifo --ws-port 10000', '')
 
   .alias('d', 'debug')
   .alias('j', 'json')
   
-  .alias('t', 'from-tcp')
-  .alias('u', 'from-unix')
+  .alias('s', 'from-socket')
   .alias('f', 'from-fifo')
   .alias('p', 'ws-port')
 
@@ -32,19 +22,18 @@ argv = yargs
   .default('p', 10000)
 
   .boolean(['d', 'j'])
-  .string(['f', 'u', 't'])
+  .string(['f', 's'])
 
   .describe('d', "Prints debugging information")
   .describe('j', "Try to JSON.parse input lines")
   .describe('p', "Port to open for socket.io")
-  .describe('t', "Opens TCP port for input")
+  .describe('s', "Opens TCP/UNIX socket for input")
   .describe('f', "Creates named pipe for input")
-  .describe('u', "Creates UNIX socket for input")
 
   .check (argv) ->
-    chosen = argv['from-tcp'] ? argv["from-unix"] ? argv["from-fifo"]
+    chosen = argv['from-socket'] ? argv["from-fifo"]
     if not(chosen?) || typeof(chosen) isnt "string" || chosen == ""
-      throw "At least one of '-t', '-f' or '-u' must be used"
+      throw "One of '-s' or '-f' must be used"
 
   .argv
 
@@ -52,8 +41,7 @@ argv = yargs
 
 options =  
   port         : argv['ws-port']
-  unix_socket  : argv['from-unix']
-  tcp_socket   : argv['from-tcp']
+  socket       : argv['from-socket']
   fifo         : argv['from-fifo']
   debug        : argv['debug']
   json         : argv['json']

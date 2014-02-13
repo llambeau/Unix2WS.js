@@ -21,7 +21,7 @@
 
     <style>
     body {
-      padding-top: 50px;
+      padding-top: 20px;
     }
     .center {
       padding: 40px 15px;
@@ -57,19 +57,63 @@
     <div class="container">
 
       <div class="center">
-        <h1>Received from Unix2WS:</h1>
+        <h1>Run <b>u2ws</b>, reload the page &amp; stream your data!<br/></h1>
         
-        <div class="console">
-          <div class="lines">
-            <p class="first">Trying to connect...</p>
+        <div class="row">
+          <h3>Received from Unix2WS:</h3>
+          <div class="console">
+            <div class="lines">
+              <p class="first">Trying to connect...</p>
+            </div>
           </div>
         </div>
-        <p class="comment">
-          To try this example, run ./bin/u2ws with default options,<br/>
-          reload this page, then try the following command: 
-          <pre>echo '{"hello":"world"}' | nc -U socket.sock</pre>
-        </p>
       </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          Open a first terminal &amp; type:
+        </div>
+        <div class="col-md-6">
+          Open a second terminal &amp; type:
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <pre>./bin/u2ws -s 10001</pre>
+        </div>
+        <div class="col-md-6">
+          <pre>echo '{"Hello":"World"}' | nc localhost 10001</pre>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          Another one? Using UNIX socket now:
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <pre>./bin/u2ws -s /tmp/unix.sock</pre>
+        </div>
+        <div class="col-md-6">
+          <pre>echo '{"MOAR":"*nix"}' | nc -U /tmp/unix.sock </pre>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          Least but not last, a good old named-pipe:
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <pre>./bin/u2ws -f /tmp/fifo</pre>
+        </div>
+        <div class="col-md-6">
+          <pre>echo '{"F***":"YEAH"}' > /tmp/fifo</pre>
+        </div>
+      </div>
+
 
     </div><!-- /.container -->
 

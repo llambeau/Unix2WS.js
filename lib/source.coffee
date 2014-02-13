@@ -29,7 +29,7 @@ class NetSource
   
 # FileSource (fifo)
 class FileSource
-  constructor: (@fd, @desc, @callback) ->
+  constructor: (@fd, @callback) ->
     this.destroy()
     @desc = "FILE(#{@fd})"
     
@@ -48,16 +48,12 @@ class FileSource
       fs.unlinkSync(@fd)
 
 
-## Create a unix socket stream
-Source.unix = (path, callback) ->
-  new NetSource(path, callback)
-
-## Create a tcp socket stream
-Source.tcp = (port, callback) ->
+## Create a socket stream
+Source.socket = (port, callback) ->
   new NetSource(port, callback)
 
 ## Create a named-pipe stream
 Source.fifo = (path, callback) ->
-  new FileSource(path, "FIFO #{path}", callback)
+  new FileSource(path, callback)
 
 module.exports = Source

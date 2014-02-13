@@ -13,15 +13,14 @@ class Unix2WS
     # Decode received lines as JSON objects?
     @json = params.json ? true
 
-    @sourceDesc = params.unix_socket ? params.tcp_socket ? params.fifo 
+    @sourceDesc = params.socket ? params.fifo 
 
     ##
     unless @sourceDesc?
       throw new Error("At least one input method must be chosen")
 
     @sourceFactory = switch
-      when params.unix_socket? then Source.unix
-      when params.tcp_socket?  then Source.tcp
+      when params.socket?      then Source.socket
       when params.fifo?        then Source.fifo
 
   # Propagate data to websocket client
