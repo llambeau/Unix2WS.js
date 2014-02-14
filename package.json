@@ -1,5 +1,5 @@
 {
-  "name": "Unix2WS",
+  "name": "unix2ws",
   "version": "0.0.2",
   "description": "Unix2WS allows you to easily stream data to Socket.IO clients",
   "main": "./lib/unix2ws.js",
