@@ -1,5 +1,4 @@
 #!/usr/bin/env coffee
-minimist = require 'minimist'
 Unix2WS  = require '../lib/unix2ws.coffee'
 yargs    = require 'yargs'
 
