@@ -5,6 +5,12 @@ Unix2WS allows you to easily stream data from any input to socket.io.
 
 This tool supports TCP, UNIX sockets as input, or named-pipe (FIFO)
 
+## Installation
+
+<pre>
+  npm install -g unix2ws
+</pre>
+
 ## Usage
 
 The command line tool _u2ws_ opens a Socket.IO server. Any content received through the specified source will be sent to all the Socket.IO clients.
@@ -14,12 +20,12 @@ I created this tool to be able to easily stream any line by line output from a c
 By default, u2ws will try to parse every line received as a JSON object.
 
 <pre>
-Usage: coffee ./bin/u2ws
+Usage: u2ws
 
 Examples:
-  coffee ./bin/u2ws -s 10001 --ws-port 10000
-  coffee ./bin/u2ws -s unix.sock --ws-port 10000
-  coffee ./bin/u2ws -f fifo --ws-port 10000
+  u2ws -s 10001 --ws-port 10000
+  u2ws -s unix.sock --ws-port 10000
+  u2ws -f fifo --ws-port 10000
 
 
 Options:
