@@ -13,7 +13,7 @@ This tool supports TCP, UNIX sockets as input, or named-pipe (FIFO)
 
 ## Usage
 
-The command line tool _u2ws_ opens a Socket.IO server. Any content received through the specified source will be sent to all the Socket.IO clients.
+The command line tool _u2ws_ opens a socket.io server. Any content received through the specified source will be sent to all the Socket.IO clients.
 
 I created this tool to be able to easily stream any line by line output from a command-line application to the browser.
 
@@ -39,3 +39,26 @@ Options:
 ## Example
 
 Open the example HTML file in your browser and give it a try, you'll see it's pretty simple
+
+## Limitations
+
+* It's at the moment impossible to create Unix FIFOs from node ([See this message on stackoverlow](http://stackoverflow.com/a/18226566)), I create it in a nasty way at the moment
+* UNIX sockets & UNIX FIFOs are, of course, not supported on windows
+
+## TODO
+
+I'll probably add the following features in a near future:
+
+* New parameter --room to specify if you want to broadcast the date only to one (or more?) specific socket.io rooms
+* New parameter --event to specify the event name used to propagate the data (which is "data" at the moment)
+* I'd like to add a new feature allowing me to give a node.js script as parameter, this script would expose a function receiving the socket object. I could therefore define (or reuse) some backend-side code (handshake, authentication, ...)
+
+<pre>
+module.exports = function(socket){
+  socket.on("authenticate", function(data){
+    return true;
+  });
+}
+</pre>
+
+* I have a lot of other ideas, but at the same time I think it would be cool to keep that tool simple and light
