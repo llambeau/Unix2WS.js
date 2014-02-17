@@ -49,7 +49,7 @@ Open the example HTML file in your browser and give it a try, you'll see it's pr
 
 I'll probably add the following features in a near future:
 
-* New parameter --room to specify if you want to broadcast the date only to one (or more?) specific socket.io rooms
+* New parameter --room to specify if you want to broadcast the data only to one (or more?) specific socket.io rooms
 * New parameter --event to specify the event name used to propagate the data (which is "data" at the moment)
 * I'd like to add a new feature allowing me to give a node.js script as parameter, this script would expose a function receiving the socket object. I could therefore define (or reuse) some backend-side code (handshake, authentication, ...)
 
