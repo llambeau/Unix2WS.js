@@ -46,7 +46,9 @@ class Unix2WS
     @io.sockets.emit("data", data)
   
   ## Start the tool
-  start: =>
+  ## Will call the callback (if given) with the socket.io main object
+  ## (used for backend mocking for instance)
+  start: (callback) =>
     # Create socket.io server
     @io = SocketIO.listen(@port, { log: @debug })
 
@@ -84,6 +86,9 @@ class Unix2WS
 
     # Read the source 
     @source.read()
+
+    # 
+    callback(@io) if callback?
 
   ## Stop the tool
   stop: () =>
