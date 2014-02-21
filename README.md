@@ -13,19 +13,19 @@ This tool supports TCP, UNIX sockets as input, or named-pipe (FIFO)
 
 ## Usage
 
-The command line tool _u2ws_ opens a socket.io server. Any content received through the specified source will be sent to all the Socket.IO clients.
+The command line tool _unix2ws_ opens a socket.io server. Any content received through the specified source will be sent to all the Socket.IO clients.
 
 I created this tool to be able to easily stream any line by line output from a command-line application to the browser.
 
-By default, u2ws will try to parse every line received as a JSON object.
+By default, unix2ws will try to parse every line received as a JSON object.
 
 <pre>
-Usage: u2ws
+Usage: unix2ws
 
 Examples:
-  u2ws -s 10001 --ws-port 10000
-  u2ws -s unix.sock --ws-port 10000
-  u2ws -f fifo --ws-port 10000
+  unix2ws -s 10001 --ws-port 10000
+  unix2ws -s unix.sock --ws-port 10000
+  unix2ws -f fifo --ws-port 10000
 
 
 Options:
@@ -49,7 +49,6 @@ Open the example HTML file in your browser and give it a try, you'll see it's pr
 
 I'll probably add the following features in a near future:
 
-* New parameter --room to specify if you want to broadcast the data only to one (or more?) specific socket.io rooms
 * New parameter --event to specify the event name used to propagate the data (which is "data" at the moment)
 * I'd like to add a new feature allowing me to give a node.js script as parameter, this script would expose a function receiving the socket object. I could therefore define (or reuse) some backend-side code (handshake, authentication, ...)
 

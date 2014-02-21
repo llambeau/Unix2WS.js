@@ -57,7 +57,7 @@
     <div class="container">
 
       <div class="center">
-        <h1>Run <b>u2ws</b> &amp; stream your data!<br/></h1>
+        <h1>Run <b>unix2ws</b> &amp; stream your data!<br/></h1>
         
         <div class="row">
           <h3>Received from Unix2WS:</h3>
@@ -78,7 +78,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <pre>./bin/u2ws -s 10001</pre>
+          <pre>unix2ws -s 10001</pre>
         </div>
         <div class="col-md-6">
           <pre>echo '{"Hello":"World"}' | nc localhost 10001</pre>
@@ -92,7 +92,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <pre>./bin/u2ws -s /tmp/unix.sock</pre>
+          <pre>unix2ws -s /tmp/unix.sock</pre>
         </div>
         <div class="col-md-6">
           <pre>echo '{"MOAR":"*nix"}' | nc -U /tmp/unix.sock </pre>
@@ -106,7 +106,7 @@
       </div>
       <div class="row">
         <div class="col-md-6">
-          <pre>./bin/u2ws -f /tmp/fifo</pre>
+          <pre>unix2ws -f /tmp/fifo</pre>
         </div>
         <div class="col-md-6">
           <pre>echo '{"F***":"YEAH"}' > /tmp/fifo</pre>

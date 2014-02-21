@@ -4,7 +4,7 @@
   "description": "Unix2WS allows you to easily stream data to Socket.IO clients",
   "main": "./lib/unix2ws.js",
   "bin": {
-    "u2ws": "./bin/u2ws.js"
+    "unix2ws": "./bin/unix2ws.js"
   },
    "repository": {
     "type": "git",

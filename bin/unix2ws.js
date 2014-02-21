@@ -14,19 +14,23 @@ var argv = yargs
   .alias('s', 'from-socket')
   .alias('f', 'from-fifo')
   .alias('p', 'ws-port')
+  .alias('n', 'namespace')
+  .alias('r', 'room')
   
   .default('d', false)
   .default('j', true)
   .default('p', 10000)
   
   .boolean(['d', 'j'])
-  .string(['f', 's'])
+  .string(['f', 's', 'r', 'n'])
 
   .describe('d', "Prints debugging information")
   .describe('j', "Try to JSON.parse input lines")
   .describe('p', "Port to open for socket.io")
   .describe('s', "Opens TCP/UNIX socket for input")
   .describe('f', "Creates named pipe for input")
+  .describe('r', "socket.io room to broadcast to")
+  .describe('n', "socket.io namespace to use")
 
   .check(function(argv) {
     if (argv['from-socket'] == null && argv['from-fifo'] == null){
@@ -43,7 +47,9 @@ var options = {
   socket: argv['from-socket'],
   fifo: argv['from-fifo'],
   debug: argv['debug'],
-  json: argv['json']
+  json: argv['json'],
+  room: argv['room'],
+  namespace: argv['namespace']
 };
 
 var tool = new Unix2WS(options);

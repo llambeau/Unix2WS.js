@@ -12,7 +12,11 @@ class Unix2WS
     @debug = params.debug ? false
     # Decode received lines as JSON objects?
     @json = params.json ? true
-
+    # Do we send to a room?
+    @room = params.room
+    # Or to a namespace?
+    @namespace = params.namespace
+    #
     @sourceDesc = params.socket ? params.fifo 
 
     ##
@@ -32,15 +36,27 @@ class Unix2WS
         console.error "Error while parsing JSON", data, e
         console.error "Propagating it in its raw format"
 
-    if @debug
-      console.log "Propagating: " + data
+    if @namespace?
+      @namespace.emit("data", data)
+    
+    if @room?
+      @room.emit('data', data)
 
+    # root namespace
     @io.sockets.emit("data", data)
   
   ## Start the tool
   start: =>
     # Create socket.io server
     @io = SocketIO.listen(@port, { log: @debug })
+
+    # Create namespace or room if specified
+    if @room?
+      @room = @io.sockets.in(@room)
+
+    if @namespace?
+      console.log("Creating namespace /" + @namespace)
+      @namespace = @io.of('/' + @namespace)
 
     @source = @sourceFactory @sourceDesc, (stream) =>
       data = ""
